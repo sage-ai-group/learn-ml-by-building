@@ -497,19 +497,18 @@ window.Quarto = {
 </div>
 <section id="carry-a-summary-from-one-input-to-the-next" class="level2">
 <h2 class="anchored" data-anchor-id="carry-a-summary-from-one-input-to-the-next">Carry a summary from one input to the next</h2>
-<p>A sequence model may need an earlier clue to interpret a later input: “I grew up in France …&nbsp;I speak fluent …” motivates retaining information over a gap. A recurrent neural network processes each new input together with its previous hidden state.</p>
+<p>An earlier clue can help predict a later word. A recurrent neural network carries information forward by processing each new input together with its previous hidden state.</p>
 <p>For input <span class="math inline">\(x_t\in\mathbb{R}^{d}\)</span> and state <span class="math inline">\(h_t\in\mathbb{R}^{H}\)</span>,</p>
 <p><span class="math display">\[
 h_t=\tanh(W_{xh}x_t+W_{hh}h_{t-1}+b).
 \]</span></p>
 Here <span class="math inline">\(W_{xh}\in\mathbb{R}^{H\times d}\)</span>, <span class="math inline">\(W_{hh}\in\mathbb{R}^{H\times H}\)</span>, and <span class="math inline">\(b\in\mathbb{R}^{H}\)</span>. The same parameters are reused at every time step; the input and the state change. Doubling sequence length doubles the number of updates, not the parameter count or state width.
 <figure id="figure-1" class="lecture-16-figure figure">
-<a href="../assets/lecture-notes/lecture-16/unroll.svg" target="_blank" rel="noopener" aria-label="Enlarge Figure 1"><picture><source media="(max-width: 600px)" srcset="../assets/lecture-notes/lecture-16/unroll-mobile.svg" width="129.692" height="239.217"><img src="../assets/lecture-notes/lecture-16/unroll.svg" width="409.478" height="84.866" alt="Successive inputs update hidden states through repeated applications of the same recurrent weights. Earlier information travels through intermediate states." loading="lazy" class="figure-img"></picture></a>
+<a href="../assets/lecture-notes/lecture-16/unroll.svg" target="_blank" rel="noopener" aria-label="Enlarge Figure 1"><picture><source media="(max-width: 600px)" srcset="../assets/lecture-notes/lecture-16/unroll-mobile.svg" width="132.233" height="233.519"><img src="../assets/lecture-notes/lecture-16/unroll.svg" width="417.309" height="121.266" alt="I grew up in France, followed by more words, then I speak fluent: French is a plausible continuation. Earlier information passes through repeated state updates; the weights are shared and intervening updates are omitted. This is an illustration, not a measured prediction." loading="lazy" class="figure-img"></picture></a>
 <figcaption>
-Figure 1. Unrolling exposes repeated applications of the same state update. Earlier information can affect the final prediction only through the intermediate states. The boxes share parameters. <a class="figure-enlarge" href="../assets/lecture-notes/lecture-16/unroll.svg" target="_blank" rel="noopener" aria-label="Enlarge Figure 1">Enlarge</a>
+Figure 1. France makes French a plausible continuation after fluent. The diagram marks selected positions; intervening updates are omitted. Earlier information reaches the prediction through the states. This is a linguistic illustration, not a measured language-model output. <a class="figure-enlarge" href="../assets/lecture-notes/lecture-16/unroll.svg" target="_blank" rel="noopener" aria-label="Enlarge Figure 1">Enlarge</a>
 </figcaption>
 </figure>
-<p>The classifier reads only the final hidden state. PyTorch’s recurrent module returns this state directly; <code>self.readout(h[-1])</code> selects the last recurrent layer’s final state and maps it to ten logits. It does not concatenate every past state. The notebook also repeats the recurrence by hand and checks that it matches <code>nn.RNN</code>.</p>
 </section>
 <section id="retain-write-and-expose-information-separately" class="level2">
 <h2 class="anchored" data-anchor-id="retain-write-and-expose-information-separately">Retain, write, and expose information separately</h2>
@@ -565,13 +564,14 @@ optimizer.step()</code></pre>
 <section id="reading-longer-and-waiting-longer-are-different-tests" class="level2">
 <h2 class="anchored" data-anchor-id="reading-longer-and-waiting-longer-are-different-tests">Reading longer and waiting longer are different tests</h2>
 <p>The notebook turns MNIST images into sequences: one row per step gives 28 steps with 28 inputs each; four consecutive flattened pixels per step gives 196 steps with four inputs each. Both contain exactly 784 pixels. The latter changes both the number of updates and the grouping of inputs.</p>
+<p>In the digit model, <code>self.readout(h[-1])</code> maps the last recurrent layer’s final state to ten class logits. The notebook also checks the repeated update against <code>nn.RNN</code>.</p>
 <p>The digit experiment uses 12,000 training images, 2,000 validation images, and the separate 10,000-image MNIST test set. Both architectures receive 15 epochs, the same batch orders and learning rate, and parameter counts matched within 1% for each input encoding. Results are averaged over two training seeds.</p>
 <p>With 28 row inputs, test accuracy is 95.3% for the RNN and 96.1% for the LSTM. With 196 four-pixel inputs, it is 73.7% and 85.0%. This is a larger gap under a common budget, but input grouping also changed; length alone was not isolated.</p>
 A more direct retention test keeps the 28-row representation and appends black rows <em>after</em> the complete digit. The answer is requested only at the end. No original pixels are removed, and the blank rows add no new class information.
 <figure id="figure-4" class="lecture-16-figure figure">
 <a href="../assets/lecture-notes/lecture-16/delay.svg" target="_blank" rel="noopener" aria-label="Enlarge Figure 4"><picture><source media="(max-width: 600px)" srcset="../assets/lecture-notes/lecture-16/delay-mobile.svg" width="229.480" height="165.306"><img src="../assets/lecture-notes/lecture-16/delay.svg" width="427.901" height="192.828" alt="Actual MNIST delayed-answer results averaged over two seeds. As added black rows increase from zero to 56, RNN accuracy falls from 84.4 to 74.2 percent; LSTM accuracy stays near 95 percent. Shading is the two-run range." loading="lazy" class="figure-img"></picture></a>
 <figcaption>
-Figure 4. Measured test accuracy after reading a digit and then waiting through additional black rows. Lines average two seeds; bands span their range. Every displayed delay occurs in both models extquotesingle&nbsp;training mixture, so the comparison does not rely on unseen delay lengths. <a class="figure-enlarge" href="../assets/lecture-notes/lecture-16/delay.svg" target="_blank" rel="noopener" aria-label="Enlarge Figure 4">Enlarge</a>
+Figure 4. Measured test accuracy after reading a digit and then waiting through additional black rows. Lines average two seeds; bands span their range. Every displayed delay occurs in both models’ training mixture, so the comparison does not rely on unseen delay lengths. <a class="figure-enlarge" href="../assets/lecture-notes/lecture-16/delay.svg" target="_blank" rel="noopener" aria-label="Enlarge Figure 4">Enlarge</a>
 </figcaption>
 </figure>
 <p>Both models are retrained from scratch on the same mixture of 0, 7, 14, 28, and 56 extra rows. Delays are independent of labels. The RNN falls from about 84.4% to 74.2%; the LSTM changes from about 95.3% to 94.5%.</p>

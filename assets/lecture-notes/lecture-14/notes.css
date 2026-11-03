@@ -1,4 +1,4 @@
-.lecture-14-figure { margin: 1.5rem 0 1.8rem; }
+.lecture-14-figure { scroll-margin-top: 10rem; margin: 1.5rem 0 1.8rem; }
 .lecture-14-figure img { display: block; width: 100%; height: auto; background: white; border-radius: .5rem; }
 .lecture-14-figure figcaption { color: #33415f; font-size: .92rem; line-height: 1.55; margin-top: .65rem; }
 .lecture-14-figure > a { display: block; cursor: zoom-in; }
