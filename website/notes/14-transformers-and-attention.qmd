@@ -18,18 +18,21 @@ css:
 
 ## Why a word needs its context
 
-"The man bites the dog" and "The dog bites the man" use the same words, but assign different roles. "Bank" can refer to a financial institution or the side of a river. A useful representation must account for the sequence, not just the presence of individual words.
-
-Tokenization first converts text into discrete IDs. A token can be a word, a fragment, punctuation, or a word with a leading space. An embedding maps each ID to a vector. GPT-2 adds a learned position vector, so the initial representation records both token identity and position.
-
-Attention then gives positions a way to exchange information. For a target position, a *query* describes what information to look for. Every available position supplies a *key* for matching and a *value* to contribute. These are learned numerical projections, not human-written descriptions of word meanings. <figure id="figure-1" class="lecture-14-figure">
-<a href="../assets/lecture-notes/lecture-14/lookup.svg" target="_blank" rel="noopener" aria-label="Enlarge Figure 1"><picture><source media="(max-width: 600px)" srcset="../assets/lecture-notes/lecture-14/lookup-mobile.svg" width="182.778" height="148.417"><img src="../assets/lecture-notes/lecture-14/lookup.svg" width="360.053" height="121.886" alt="A query is compared with available keys. Softmax weights determine how the corresponding value vectors contribute to a weighted output." loading="lazy"></picture></a>
-<figcaption>Figure 1. A query is compared with available keys. The resulting weights combine the corresponding values. This diagram explains the operation; it does not claim that any real head has a fixed linguistic role. <a class="figure-enlarge" href="../assets/lecture-notes/lecture-14/lookup.svg" target="_blank" rel="noopener" aria-label="Enlarge Figure 1">Enlarge</a></figcaption>
+The same words can assign different roles, and the same word can take different meanings. A useful representation must capture both order and context. <figure id="figure-1" class="lecture-14-figure">
+<a href="../assets/lecture-notes/lecture-14/sentence-meaning.svg" target="_blank" rel="noopener" aria-label="Enlarge Figure 1"><picture><source media="(max-width: 600px)" srcset="../assets/lecture-notes/lecture-14/sentence-meaning-mobile.svg" width="184.669" height="222.726"><img src="../assets/lecture-notes/lecture-14/sentence-meaning.svg" width="328.710" height="119.017" alt="The man bites the dog versus the dog bites the man: word order changes who acts. Money versus ducks in otherwise matched sentences suggests a financial bank versus a river bank." loading="lazy"></picture></a>
+<figcaption>Figure 1. Swapping man and dog reverses who bites whom. Money and ducks suggest different readings of bank. Colors track the words and clues; these are linguistic illustrations. <a class="figure-enlarge" href="../assets/lecture-notes/lecture-14/sentence-meaning.svg" target="_blank" rel="noopener" aria-label="Enlarge Figure 1">Enlarge</a></figcaption>
 </figure>
+
+Tokenization converts text into discrete IDs. A token can be a word, a fragment, punctuation, or a word with a leading space. An embedding maps each ID to a vector. GPT-2 adds a learned position vector, so its initial representation records both identity and position.
+
+Attention lets positions exchange information. A *query* is compared with available *keys*; the resulting weights combine their *values*. These are learned numerical projections. Their roles become concrete in the calculation below.
 
 ## From matching scores to a weighted sum
 
-The whiteboard sentence about an animal being too tired to cross a street motivates a useful lookup: the pronoun may need information about the animal. That is an interpretation of the sentence, not a measured attention pattern. To examine a trained model, the notebook uses GPT-2 and records its actual vectors, weights, and predictions.
+<figure id="figure-2" class="lecture-14-figure">
+<a href="../assets/lecture-notes/lecture-14/pronoun.svg" target="_blank" rel="noopener" aria-label="Enlarge Figure 2"><picture><source media="(max-width: 600px)" srcset="../assets/lecture-notes/lecture-14/pronoun-mobile.svg" width="149.938" height="110.719"><img src="../assets/lecture-notes/lecture-14/pronoun.svg" width="328.470" height="80.764" alt="The animal did not cross the street because it was too tired. A dashed arrow links it back to animal as a plausible human interpretation; no measured attention weights are shown." loading="lazy"></picture></a>
+<figcaption>Figure 2. The sentence suggests that the animal was tired. The arrow illustrates a plausible reference; it is not a recorded attention weight or a fixed role assigned to a head. <a class="figure-enlarge" href="../assets/lecture-notes/lecture-14/pronoun.svg" target="_blank" rel="noopener" aria-label="Enlarge Figure 2">Enlarge</a></figcaption>
+</figure>
 
 Let $X\in\mathbb{R}^{T\times d}$ contain the incoming representations for $T$ tokens. One attention head learns three projection matrices:
 
@@ -61,14 +64,14 @@ $$
 
  The second coordinate cancels even though both weights are positive. A value coordinate is a signed number; an attention weight is not a percentage of a word's meaning.
 
-In the notebook, the same calculation is performed with one actual GPT-2 head: layer index 5, head index 2, with six input tokens and 64 value coordinates. The three essential operations are
+The notebook reconstructs a real GPT-2 head (layer index 5, head index 2): six tokens, 64 value coordinates. Its key operations are
 
     scores = Q @ K.T / math.sqrt(d_k)
     scores = scores.masked_fill(future_mask, -torch.inf)
     weights = scores.softmax(-1)
     context = weights @ V
 
-The reconstructed 64-dimensional output matches the model's saved head output; the recorded maximum difference is zero at the displayed precision. Future weights are zero and every row sums to one. The illustrated three-coordinate slice is only a view into that full calculation.
+The reconstructed output matches the model's saved head output, with maximum difference zero at displayed precision. Future weights are zero; each row sums to one.
 
 Training learns $W_Q,W_K,W_V$. The attention weights $A$ are calculated afresh from each input. Confusing these two kinds of weights obscures what attention learns and what changes at inference time.
 
@@ -76,9 +79,9 @@ Training learns $W_Q,W_K,W_V$. The attention weights $A$ are calculated afresh f
 
 For causal attention, $M_{ij}=0$ when $j\leq i$ and $M_{ij}=-\infty$ when $j>i$. A token can use itself and earlier positions, but not later ones. The restriction applies at every block.
 
-The notebook compares "The bank was closed" with "The bank was flooded." Only the later word changes; the token *bank* keeps the same identity and position. Its GPT-2 representation is identical at every stage. BERT uses bidirectional attention, so its representation can change. <figure id="figure-2" class="lecture-14-figure">
-<a href="../assets/lecture-notes/lecture-14/context-access.svg" target="_blank" rel="noopener" aria-label="Enlarge Figure 2"><picture><source media="(max-width: 600px)" srcset="../assets/lecture-notes/lecture-14/context-access-mobile.svg" width="227.638" height="170.787"><img src="../assets/lecture-notes/lecture-14/context-access.svg" width="426.064" height="193.237" alt="Replacing closed with flooded after the word bank leaves its GPT-2 representation unchanged at all stages, while BERT changes. Relative change in BERT reaches about 0.69." loading="lazy"></picture></a>
-<figcaption>Figure 2. Measured changes to the representation of bank after replacing the later word closed with flooded. GPT-2 stays at zero; BERT changes. The curves use complete hidden vectors, not a two-dimensional projection. <a class="figure-enlarge" href="../assets/lecture-notes/lecture-14/context-access.svg" target="_blank" rel="noopener" aria-label="Enlarge Figure 2">Enlarge</a></figcaption>
+Only the later word changes in the sentence pair below; *bank* keeps the same identity and position. Its GPT-2 representation stays identical. BERT allows context from both sides, so its representation can change. <figure id="figure-3" class="lecture-14-figure">
+<a href="../assets/lecture-notes/lecture-14/context-access.svg" target="_blank" rel="noopener" aria-label="Enlarge Figure 3"><picture><source media="(max-width: 600px)" srcset="../assets/lecture-notes/lecture-14/context-access-mobile.svg" width="227.638" height="216.482"><img src="../assets/lecture-notes/lecture-14/context-access.svg" width="426.064" height="219.085" alt="Replacing closed with flooded after the word bank leaves its GPT-2 representation unchanged at all stages, while BERT changes. Relative change in BERT reaches about 0.69." loading="lazy"></picture></a>
+<figcaption>Figure 3. Measured changes to the representation of bank after replacing the later word closed with flooded. GPT-2 stays at zero; BERT changes. The curves use complete hidden vectors, not a two-dimensional projection. <a class="figure-enlarge" href="../assets/lecture-notes/lecture-14/context-access.svg" target="_blank" rel="noopener" aria-label="Enlarge Figure 3">Enlarge</a></figcaption>
 </figure>
 
 The vertical axis is a within-model relative change,
@@ -99,9 +102,9 @@ Multiple heads use separate learned projections. Their outputs are concatenated 
 
 Different attention patterns do not establish fixed linguistic roles or causal importance to the final prediction.
 
-<figure id="figure-3" class="lecture-14-figure">
-<a href="../assets/lecture-notes/lecture-14/block.svg" target="_blank" rel="noopener" aria-label="Enlarge Figure 3"><picture><source media="(max-width: 600px)" srcset="../assets/lecture-notes/lecture-14/block-mobile.svg" width="172.588" height="243.869"><img src="../assets/lecture-notes/lecture-14/block.svg" width="434.242" height="83.570" alt="A GPT-2 block applies layer normalization and multi-head attention, adds the incoming residual, then applies layer normalization and an MLP with another residual addition." loading="lazy"></picture></a>
-<figcaption>Figure 3. A GPT-2 block mixes information across positions with attention, then transforms each position with an MLP. Residual additions preserve a path for the incoming representation. LN denotes layer normalization. <a class="figure-enlarge" href="../assets/lecture-notes/lecture-14/block.svg" target="_blank" rel="noopener" aria-label="Enlarge Figure 3">Enlarge</a></figcaption>
+<figure id="figure-4" class="lecture-14-figure">
+<a href="../assets/lecture-notes/lecture-14/block.svg" target="_blank" rel="noopener" aria-label="Enlarge Figure 4"><picture><source media="(max-width: 600px)" srcset="../assets/lecture-notes/lecture-14/block-mobile.svg" width="172.588" height="243.869"><img src="../assets/lecture-notes/lecture-14/block.svg" width="434.242" height="83.570" alt="A GPT-2 block applies layer normalization and multi-head attention, adds the incoming residual, then applies layer normalization and an MLP with another residual addition." loading="lazy"></picture></a>
+<figcaption>Figure 4. A GPT-2 block mixes information across positions with attention, then transforms each position with an MLP. Residual additions preserve a path for the incoming representation. LN denotes layer normalization. <a class="figure-enlarge" href="../assets/lecture-notes/lecture-14/block.svg" target="_blank" rel="noopener" aria-label="Enlarge Figure 4">Enlarge</a></figcaption>
 </figure>
 
 The MLP shares parameters across positions within a block; different blocks have different parameters. All these paths jointly determine the next representation.
