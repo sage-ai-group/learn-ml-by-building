@@ -1,44 +1,28 @@
 ---
-title: "Lecture 14: Understanding Transformers Through Exploration and Visualization"
-subtitle: "Attention mechanisms, GPT-2 architecture, and interpretability"
+title: "Lecture 14: Transformers and Attention"
 ---
 
 ## Overview
 
-Transformers have revolutionized natural language processing since their introduction in "Attention is All You Need" (Vaswani et al., 2017). This lecture explores pre-trained transformer models through visualization and analysis, specifically examining GPT-2. Rather than building transformers from scratch, we perform an "MRI scan" on a transformer's brain while it processes text—extracting attention patterns, watching hidden representations evolve, and discovering how different components specialize in different tasks. You'll gain an intuitive understanding of how transformers work by examining them in action.
+Attention turns query-key matches into weights that combine value vectors. We reconstruct one real GPT-2 head, test which context can change a representation, and connect the calculation to next-token training and generation.
 
 ## Learning Objectives
 
-By the end of this lecture, you will be able to:
-
-- Extract and visualize attention weights from any pre-trained transformer model
-- Identify attention head specialization and understand how different heads focus on different linguistic patterns
-- Track hidden state evolution and see how word representations change through transformer layers
-- Understand causal masking in autoregressive models like GPT-2
-- Interpret attention patterns to understand model predictions
-- Use visualization tools like BertViz and custom heatmaps for model analysis
-- Recognize common attention patterns (positional, syntactic, semantic)
+- Explain queries, keys, values, and a weighted attention output.
+- Use a causal mask to reason about which positions can contribute.
+- Distinguish learned projection parameters, input-dependent attention weights, and next-token probabilities.
 
 ## Materials
 
-::: {.callout-tip}
-## Quick Access
-**[Transformers Notebook](https://github.com/sage-ai-group/learn-ml-by-building/blob/main/Lecture%2014%20Transformers/14-Transformers.ipynb)**
-:::
+- **[Lecture notes](../notes/14-transformers-and-attention.qmd)**
+- [PDF version](https://github.com/sage-ai-group/learn-ml-by-building/raw/main/Lecture%20Notes/lecture-14-transformers-and-attention.pdf)
+- [Interactive notebook](https://github.com/sage-ai-group/learn-ml-by-building/blob/main/Lecture%2014%20Transformers/14-Transformers.ipynb)
 
-## Connection to Project 2
+## Further Reading
 
-This lecture provides the foundation for **[Project 2: Neural Archaeology](../projects/project2.qmd)**, where you'll go deeper into the hidden layers of language models to decode how they represent concepts like safety, emotion, and truthfulness. You'll apply cutting-edge interpretability techniques from AI safety research to understand what models actually learn beyond just attention patterns.
-
-## Resources
-
-- **Papers**: 
-  - "Attention is All You Need" (Vaswani et al., 2017)
-  - "What Does BERT Look At?" (Clark et al., 2019)
-- **Tutorials**: 
-  - Jay Alammar's "The Illustrated Transformer"
-  - Andrej Karpathy's "minGPT"
+- [Attention Is All You Need](https://arxiv.org/abs/1706.03762)
+- [BERT](https://aclanthology.org/N19-1423/)
 
 ---
 
-**Previous**: [← Lecture 13: Neural Network Architecture](13-nn-architecture.qmd) | **Next**: [Lecture 15: Convolutional Neural Networks →](15-cnn.qmd)
+[← Lecture 13: Neural Networks](13-nn-architecture.qmd) | [Lecture 15: CNNs →](15-cnn.qmd)

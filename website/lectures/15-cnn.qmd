@@ -1,42 +1,28 @@
 ---
-title: "Lecture 15: Convolutional Neural Networks - Learning to See"
-subtitle: "From edge detection to hierarchical feature learning in computer vision"
+title: "Lecture 15: Convolutional Neural Networks"
 ---
 
 ## Overview
 
-In 2012, AlexNet achieved a breakthrough 15.3% error rate on ImageNet, fundamentally changing computer vision. This lecture explores why CNNs work so well for visual tasks through hands-on experimentation. The core insight: instead of learning separate parameters for every pixel location, CNNs learn small patterns that slide across the image through weight sharing, reducing parameters from millions to thousands while encoding translation invariance. You'll implement convolution from scratch, compare MLP vs CNN robustness on MNIST, visualize hierarchical features in ResNet50, and use saliency maps to understand what CNNs actually "see."
+Convolution reuses a small detector across an image. We compute its response, distinguish equivariance from invariance, and test how architecture and shifted training affect predictions on the same handwritten digits.
 
 ## Learning Objectives
 
-By the end of this lecture, you will be able to:
-
-- Understand why spatial structure matters in vision and how CNNs exploit it
-- Learn how convolution operations extract local features through weight sharing
-- Master the mathematics behind convolution and its relationship to cross-correlation
-- Understand how CNNs build hierarchical representations from edges to objects
-- Learn the role of pooling in creating translation invariance and dimension reduction
-- Implement convolution from scratch to understand the operation deeply
-- Visualize learned features at different network depths
-- Apply transfer learning to solve custom image classification tasks
-- Diagnose what CNNs actually "see" using activation and gradient visualization
-- Compare translation robustness between fully connected networks and CNNs
+- Calculate a filter response and explain local connectivity and weight sharing.
+- Identify what pooling preserves and what it discards.
+- Evaluate shift robustness and interpret feature maps and sensitivity probes carefully.
 
 ## Materials
 
-::: {.callout-tip}
-## Quick Access
-**[CNN Notebook](https://github.com/sage-ai-group/learn-ml-by-building/blob/main/Lecture%2015%20CNN/15-CNN.ipynb)**
-:::
+- **[Lecture notes](../notes/15-convolutional-neural-networks.qmd)**
+- [PDF version](https://github.com/sage-ai-group/learn-ml-by-building/raw/main/Lecture%20Notes/lecture-15-convolutional-neural-networks.pdf)
+- [Interactive notebook](https://github.com/sage-ai-group/learn-ml-by-building/blob/main/Lecture%2015%20CNN/15-CNN.ipynb)
 
-## Resources
+## Further Reading
 
-- **Papers**: 
-  - "ImageNet Classification with Deep Convolutional Neural Networks" (Krizhevsky et al., 2012) - AlexNet
-  - "Deep Residual Learning for Image Recognition" (He et al., 2015) - ResNet
-  - "Visualizing and Understanding Convolutional Networks" (Zeiler & Fergus, 2013)
-  - "Deep Inside Convolutional Networks: Visualising Image Classification Models" (Simonyan et al., 2013) - Saliency maps
-  
+- [Convolution arithmetic](https://arxiv.org/abs/1603.07285)
+- [Making Convolutional Networks Shift-Invariant Again](https://proceedings.mlr.press/v97/zhang19a.html)
+
 ---
 
-**Previous**: [← Lecture 14: Understanding Transformers](14-transformers.qmd) | **Next**: [Lecture 16: Recurrent Neural Networks →](16-rnn.qmd)
+[← Lecture 14: Transformers](14-transformers.qmd) | [Lecture 16: RNNs and LSTMs →](16-rnn.qmd)
