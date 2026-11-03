@@ -19,7 +19,7 @@ css:
 ## Why a word needs its context
 
 The same words can assign different roles, and the same word can take different meanings. A useful representation must capture both order and context. <figure id="figure-1" class="lecture-14-figure">
-<a href="../assets/lecture-notes/lecture-14/sentence-meaning.svg" target="_blank" rel="noopener" aria-label="Enlarge Figure 1"><picture><source media="(max-width: 600px)" srcset="../assets/lecture-notes/lecture-14/sentence-meaning-mobile.svg" width="184.669" height="222.726"><img src="../assets/lecture-notes/lecture-14/sentence-meaning.svg" width="328.710" height="119.017" alt="The man bites the dog versus the dog bites the man: word order changes who acts. Money versus ducks in otherwise matched sentences suggests a financial bank versus a river bank." loading="lazy"></picture></a>
+<a href="../assets/lecture-notes/lecture-14/sentence-meaning.svg" target="_blank" rel="noopener" aria-label="Enlarge Figure 1"><picture><source media="(max-width: 600px)" srcset="../assets/lecture-notes/lecture-14/sentence-meaning-mobile.svg" width="184.669" height="222.726"><img src="../assets/lecture-notes/lecture-14/sentence-meaning.svg" width="338.432" height="119.017" alt="The man bites the dog versus the dog bites the man: word order changes who acts. Money versus ducks in otherwise matched sentences suggests a financial bank versus a river bank." loading="lazy"></picture></a>
 <figcaption>Figure 1. Swapping man and dog reverses who bites whom. Money and ducks suggest different readings of bank. Colors track the words and clues; these are linguistic illustrations. <a class="figure-enlarge" href="../assets/lecture-notes/lecture-14/sentence-meaning.svg" target="_blank" rel="noopener" aria-label="Enlarge Figure 1">Enlarge</a></figcaption>
 </figure>
 
@@ -30,7 +30,7 @@ Attention lets positions exchange information. A *query* is compared with availa
 ## From matching scores to a weighted sum
 
 <figure id="figure-2" class="lecture-14-figure">
-<a href="../assets/lecture-notes/lecture-14/pronoun.svg" target="_blank" rel="noopener" aria-label="Enlarge Figure 2"><picture><source media="(max-width: 600px)" srcset="../assets/lecture-notes/lecture-14/pronoun-mobile.svg" width="149.938" height="110.719"><img src="../assets/lecture-notes/lecture-14/pronoun.svg" width="328.470" height="80.764" alt="The animal did not cross the street because it was too tired. A dashed arrow links it back to animal as a plausible human interpretation; no measured attention weights are shown." loading="lazy"></picture></a>
+<a href="../assets/lecture-notes/lecture-14/pronoun.svg" target="_blank" rel="noopener" aria-label="Enlarge Figure 2"><picture><source media="(max-width: 600px)" srcset="../assets/lecture-notes/lecture-14/pronoun-mobile.svg" width="146.235" height="123.474"><img src="../assets/lecture-notes/lecture-14/pronoun.svg" width="328.470" height="82.182" alt="The animal did not cross the street because it was too tired. A dashed arrow links it back to animal as a plausible human interpretation; no measured attention weights are shown." loading="lazy"></picture></a>
 <figcaption>Figure 2. The sentence suggests that the animal was tired. The arrow illustrates a plausible reference; it is not a recorded attention weight or a fixed role assigned to a head. <a class="figure-enlarge" href="../assets/lecture-notes/lecture-14/pronoun.svg" target="_blank" rel="noopener" aria-label="Enlarge Figure 2">Enlarge</a></figcaption>
 </figure>
 
