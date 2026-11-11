@@ -46,7 +46,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-9c0cd15f05aa0bca1771250d4e6ce630.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-b0b3ccdfeaeb250f9384c430b94ac02b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -74,6 +74,10 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<meta name="mermaid-theme" content="neutral">
+<script src="../site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="../site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
 
 <link rel="stylesheet" href="../site-legibility-v2.css">
@@ -413,12 +417,14 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul class="collapse">
-  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
-  <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link" data-scroll-target="#learning-objectives">Learning Objectives</a></li>
-  <li><a href="#materials" id="toc-materials" class="nav-link" data-scroll-target="#materials">Materials</a></li>
-  <li><a href="#what-youll-build" id="toc-what-youll-build" class="nav-link" data-scroll-target="#what-youll-build">What You’ll Build</a></li>
-  <li><a href="#technical-stack" id="toc-technical-stack" class="nav-link" data-scroll-target="#technical-stack">Technical Stack</a></li>
-  <li><a href="#research-context" id="toc-research-context" class="nav-link" data-scroll-target="#research-context">Research Context</a></li>
+  <li><a href="#getting-started" id="toc-getting-started" class="nav-link active" data-scroll-target="#getting-started">Getting started</a></li>
+  <li><a href="#q1.-tests-and-metrics-15-points" id="toc-q1.-tests-and-metrics-15-points" class="nav-link" data-scroll-target="#q1.-tests-and-metrics-15-points">Q1. Tests and metrics (15 points)</a></li>
+  <li><a href="#q2.-analyze-the-results-10-points" id="toc-q2.-analyze-the-results-10-points" class="nav-link" data-scroll-target="#q2.-analyze-the-results-10-points">Q2. Analyze the results (10 points)</a></li>
+  <li><a href="#q3.-compare-two-prompts-10-points" id="toc-q3.-compare-two-prompts-10-points" class="nav-link" data-scroll-target="#q3.-compare-two-prompts-10-points">Q3. Compare two prompts (10 points)</a></li>
+  <li><a href="#q4.-generate-a-plan-10-points" id="toc-q4.-generate-a-plan-10-points" class="nav-link" data-scroll-target="#q4.-generate-a-plan-10-points">Q4. Generate a plan (10 points)</a></li>
+  <li><a href="#q5.-generate-an-action-10-points" id="toc-q5.-generate-an-action-10-points" class="nav-link" data-scroll-target="#q5.-generate-an-action-10-points">Q5. Generate an action (10 points)</a></li>
+  <li><a href="#q6.-implement-the-loop-45-points" id="toc-q6.-implement-the-loop-45-points" class="nav-link" data-scroll-target="#q6.-implement-the-loop-45-points">Q6. Implement the loop (45 points)</a></li>
+  <li><a href="#results-and-submission" id="toc-results-and-submission" class="nav-link" data-scroll-target="#results-and-submission">Results and submission</a></li>
   </ul>
 </nav>
     </div>
@@ -428,7 +434,6 @@ ul.task-list li input[type="checkbox"] {
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../projects/index.html">Projects</a></li><li class="breadcrumb-item"><a href="../projects/thought_cascade.html">Project 3: Thought Cascade</a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title">Project 3: Thought Cascade</h1>
-<p class="subtitle lead">Building and Evaluating Agentic AI Systems with Small Language Models</p>
 </div>
 
 
@@ -445,37 +450,28 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="overview" class="level2">
-<h2 class="anchored" data-anchor-id="overview">Overview</h2>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
+<p>Build a small code-repair loop and measure when feedback helps. You will write tests, compare prompts, and inspect how test results change a repair.</p>
+<p>Complete the code and required analysis directly in the notebook and submit a printed PDF of it. The notebook contains the full instructions; no separate report is needed.</p>
+<p>This is an individual assignment worth 10% of the course grade, marked out of 100 points: Q1 (15), Q2 (10), Q3 (10), Q4 (10), Q5 (10) and Q6 (45). See the <a href="../schedule.html">course schedule</a> for the deadline.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+
+<pre class="mermaid mermaid-js">flowchart LR
+    C[Code + permitted feedback] --&gt; P[Plan]
+    P --&gt; A[Patch]
+    A --&gt; T[Tests]
+    T --&gt;|next round| C
+</pre>
 </div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Fall 2026
+<p></p></figure><p></p>
 </div>
 </div>
-<div class="callout-body-container callout-body">
-<p>This is an individual assignment worth 10% of the course grade. It is due Monday, November 2, at 11:59 p.m. ET. See the <a href="../schedule.html">live schedule</a> for updates.</p>
 </div>
-</div>
-<p>In this assignment, you will explore the transition from traditional “single-shot” prompting to <strong>Agentic AI</strong>. You will build a system that uses the <strong>ReAct (Reasoning + Acting)</strong> pattern to solve complex debugging problems by iterating, testing, and self-correcting.</p>
-</section>
-<section id="learning-objectives" class="level2">
-<h2 class="anchored" data-anchor-id="learning-objectives">Learning Objectives</h2>
-<p>By completing this project, you will:</p>
-<ul>
-<li><strong>Understand</strong> the theoretical foundations of agentic AI and why iteration beats size</li>
-<li><strong>Build</strong> complete agentic systems using the ReAct pattern</li>
-<li><strong>Measure</strong> system performance at the component level, not just end-to-end</li>
-<li><strong>Design</strong> tools that enable effective agent-environment interaction</li>
-<li><strong>Diagnose</strong> failure modes and implement recovery strategies</li>
-<li><strong>Apply</strong> agentic patterns to diverse problem domains</li>
-</ul>
-</section>
-<section id="materials" class="level2">
-<h2 class="anchored" data-anchor-id="materials">Materials</h2>
+<section id="getting-started" class="level2">
+<h2 class="anchored" data-anchor-id="getting-started">Getting started</h2>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -486,62 +482,137 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong><a href="https://github.com/sage-ai-group/learn-ml-by-building/blob/main/Project%203%20Thought%20Cascade/p03_Thought_Cascade.ipynb">Project Notebook (GitHub)</a></strong> — Complete implementation guide and assignment<br>
-<strong><a href="https://github.com/sage-ai-group/learn-ml-by-building/blob/main/Project%203%20Thought%20Cascade/README.md">Setup Guide</a></strong> — Local setup instructions</p>
+<ul>
+<li><strong><a href="https://github.com/sage-ai-group/learn-ml-by-building/blob/main/Project%203%20Thought%20Cascade/p03_Thought_Cascade.ipynb">Project Notebook (<code>.ipynb</code>)</a></strong> — Self-contained assignment notebook (upload directly to Google Colab)</li>
+<li><strong><a href="https://github.com/sage-ai-group/learn-ml-by-building/blob/main/Project%203%20Thought%20Cascade/p03_Thought_Cascade.pdf">Notebook Preview (<code>.pdf</code>)</a></strong> — Read-only PDF copy of the student notebook</li>
+<li><strong><a href="https://github.com/sage-ai-group/learn-ml-by-building/blob/main/Project%203%20Thought%20Cascade/Project3_Student_Guide.pdf">Student Field Guide (<code>.pdf</code>)</a></strong> — 2-page companion sheet (3-stage workflow, mini knowledge points, and contract checklist)</li>
+<li><strong><a href="https://github.com/sage-ai-group/learn-ml-by-building/blob/main/Project%203%20Thought%20Cascade/README.md">Setup Guide (<code>README.md</code>)</a></strong> — Local environment notes and troubleshooting</li>
+</ul>
 </div>
 </div>
-<div class="callout callout-style-default callout-important callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="true" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Important</span>Submission Requirements
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-3" class="callout-3-contents callout-collapse collapse show">
-<div class="callout-body-container callout-body">
+<p>Download the course notebook, open <a href="https://colab.research.google.com/">Google Colab</a>, and choose <strong>File &gt; Upload notebook</strong>. Select <strong>Runtime &gt; Change runtime type &gt; T4 GPU</strong> and run setup first. Helpers, fixtures and illustrations are embedded; no separate files are needed. Use Qwen3-1.7B in 4-bit NF4 with the supplied model revision and settings. No Hugging Face token or paid API is needed. The <a href="https://github.com/sage-ai-group/learn-ml-by-building/blob/main/Project%203%20Thought%20Cascade/README.md">setup guide</a> covers local use and troubleshooting.</p>
+<p>Work through Q1–Q6 in order. Complete six functions marked <code>TODO</code>: three in Q1 and one each in Q4–Q6. The notebook provides their full contracts and checks. You should be comfortable with Python functions, loops, lists, dictionaries and reading exceptions. Lecture 17 introduces prompts, tools and observations; the notebook includes a worked controller example. Loading, quantization, execution and logging are supplied, not assessed. Complete exercises in notebook cells: rerunning setup replaces the extracted support files.</p>
+<p>The experiments use seeds 11, 22 and 33 and at most 57 model calls: six in Q1, three in Q3 and up to 48 in Q6. Plans get 128 output tokens, patches get 512, and inputs plus outputs are capped at 4096. Allow about 10–15 minutes including setup and model download; runtime varies. This is computer runtime, not total assignment time. Plan separate work sessions for implementation, experiments and analysis.</p>
+<p>If no GPU is available, complete Q1’s deterministic checks and Q4–Q6’s scripted checks, then ask staff for recorded results. Label recorded results as such. Do not purchase compute. The code runner has a timeout but is not a security sandbox: use a disposable runtime without Drive mounts or secrets.</p>
+</section>
+<section id="q1.-tests-and-metrics-15-points" class="level2">
+<h2 class="anchored" data-anchor-id="q1.-tests-and-metrics-15-points">Q1. Tests and metrics (15 points)</h2>
+<p>The supplied binary search should return the leftmost matching index in a sorted integer list, or -1 when absent. Binary search halves the candidate interval. In a half-open interval <code>[left, right)</code>, the right bound is excluded; updates must preserve that convention. A matching value may have an earlier duplicate. Trace the two illustrated failures in the notebook, then implement:</p>
+<ul>
+<li><code>leftmost_index_or_minus_one</code> (3 points): an independent linear-scan oracle.</li>
+<li><code>build_strict_tests</code> (7): at least 10 distinct explicit cases covering empty and singleton lists, first/last index, absent below/between/above, negative values and duplicates. Put these cases first, then add exactly <code>n_random</code> cases using a local <code>random.Random(seed)</code>: sorted arrays of length 0–20, values −10…10 and targets −12…12. Label cases with your oracle. Use seed 123 and 100 random cases for the experiment.</li>
+<li><code>measure_single_shot_success</code> (5): aggregate saved attempts into attempt count, all-tests-pass success rate, mean test pass fraction and compilation rate. Preserve the records, keep failures in the denominator, and raise <code>ValueError</code> for empty input.</li>
+</ul>
+<p>Run the checks and coverage plot. Inspect whether generated code differs from the starter; a changed patch need not be better. A patch passing 91 of 100 cases has a 91% case pass rate but is not a successful repair. Those cases evaluate one patch, not 100 independent model attempts. The original code should pass MINIMAL’s four cases and fail a valid STRICT suite; exact STRICT counts depend on your cases. Generate three prompt-A attempts and rescore the same outputs on STRICT. Also run one attempt each on <code>gcd</code>, <code>flatten</code> and <code>lcs_length</code> with seed 11. Here <code>lcs_length</code> means longest common substring, not subsequence.</p>
+</section>
+<section id="q2.-analyze-the-results-10-points" class="level2">
+<h2 class="anchored" data-anchor-id="q2.-analyze-the-results-10-points">Q2. Analyze the results (10 points)</h2>
+<p>Write 200–350 words covering:</p>
 <ol type="1">
-<li><strong>Complete all coding implementations</strong> marked with <code>TODO</code> in the notebook.</li>
-<li><strong>Complete all analysis sections</strong> explicitly labeled “Required Analysis”.</li>
-<li><strong>Run all cells</strong> so that key tables and plots are visible in your saved notebook.</li>
-<li><strong>Follow course submission instructions</strong> for exporting your answers.</li>
+<li>The original code’s MINIMAL and STRICT counts, with one failing input and an explanation of the bug (3 points).</li>
+<li>The same three generated outputs under both suites. Distinguish changed measurement from changed model behavior (3).</li>
+<li>Syntax, execution and logical failures in your saved records (2). Inspect exception counts and failures; <code>tested</code> only means the suite ran, and compilation only checks syntax. If a category did not occur, say so; label any synthetic examples.</li>
+<li>Why one attempt on each of three QuixBugs tasks cannot establish consistent performance, and why public tests do not establish generalization (2).</li>
 </ol>
+</section>
+<section id="q3.-compare-two-prompts-10-points" class="level2">
+<h2 class="anchored" data-anchor-id="q3.-compare-two-prompts-10-points">Q3. Compare two prompts (10 points)</h2>
+<p>Reuse prompt A’s saved outputs. Prompt B adds the supplied instruction to check loop bounds, duplicates and empty input. Use the same seeds, settings, patch budget and STRICT evaluator. Keep STRICT out of the prompts and do not regenerate A selectively.</p>
+<p>Report the table and one paired code comparison, including whether either patch changed the starter (5 points). Explain the result and the uncertainty from three seeds (5), including a ceiling effect if both prompts pass every test. Aim for 100-200 words, excluding the table and code.</p>
+</section>
+<section id="q4.-generate-a-plan-10-points" class="level2">
+<h2 class="anchored" data-anchor-id="q4.-generate-a-plan-10-points">Q4. Generate a plan (10 points)</h2>
+<p>Implement <code>generate_thought(client, context, seed)</code>. Include the supplied context unchanged: specification, examples, current code, and development feedback when present. Ask for a diagnosis and one proposed change in at most three sentences, without code. Make one call with the given seed and <code>max_new_tokens=128</code>; return the full generation record.</p>
+<p>Points: complete context (4), focused instruction (3), correct seed, token limit and return value (3). Keep the function task-independent: do not append known solutions, a decoder mapping or test answers. Staff inspect prompts as well as scripted checks.</p>
+</section>
+<section id="q5.-generate-an-action-10-points" class="level2">
+<h2 class="anchored" data-anchor-id="q5.-generate-an-action-10-points">Q5. Generate an action (10 points)</h2>
+<p>Implement <code>generate_action(client, context, thought, seed)</code>, where <code>thought</code> is the plan text. Include the complete context and plan. Request the complete corrected Python module in one code block with no prose. Make one call with the given seed and <code>max_new_tokens=512</code>, then use <code>extract_code</code>.</p>
+<p>Return <code>(action, generation_record)</code>, where <code>action = {'tool': 'fix_code', 'params': {'code': extracted_code}}</code>. Construct the dictionary in Python. Run the component checks.</p>
+<p>Points: context and plan (4), code extraction and action structure (4), reproducible record (2).</p>
+</section>
+<section id="q6.-implement-the-loop-45-points" class="level2">
+<h2 class="anchored" data-anchor-id="q6.-implement-the-loop-45-points">Q6. Implement the loop (45 points)</h2>
+<p>Implement <code>react_loop</code> using the notebook’s contract. Start by evaluating the original code on development tests. Both conditions revise their latest code. Neither sees test results in round one; only <code>feedback=True</code> receives the latest observation in subsequent rounds. Without feedback, keep results, scores and failure descriptions out of model prompts. Both controllers still use development scores for stopping and selection.</p>
+<p>In zero-based round <code>i</code>, use seeds <code>seed + 2*i</code> for the plan and <code>seed + 2*i + 1</code> for the patch. Validate each action and record its result. Invalid actions become feedback while retaining the preceding code. Keep the best development score; ties keep the earlier candidate. Stop on development success or at the round limit. An initially correct candidate needs no model calls. Never use held-out cases for selection.</p>
+<p>The controller earns 20 points: initialization and context (6), validation and step records (5), selection and stopping (6), and seeds and call limits (3). Scripted checks earn 5 points. The experiment earns 10: complete paired runs (4), tables and costs (3), and the trajectory plot and code comparison (3). Analysis earns 10: interpreting outcomes (3), tracing a change or failure (3), checking paired first rounds (2), and explaining information and generalization limits (2).</p>
+<p>The next prompt uses the current candidate; final evaluation uses the best candidate. For example:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>After testing</th>
+<th>Current candidate</th>
+<th>Development score</th>
+<th>Best candidate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Start</td>
+<td>Original</td>
+<td>2/4</td>
+<td>Original</td>
+</tr>
+<tr class="even">
+<td>Round 1</td>
+<td>Patch A</td>
+<td>3/4</td>
+<td>Patch A</td>
+</tr>
+<tr class="odd">
+<td>Round 2</td>
+<td>Patch B</td>
+<td>1/4</td>
+<td>Patch A</td>
+</tr>
+</tbody>
+</table>
+<p>These are invented scores. Another round would revise Patch B, while final selection keeps Patch A. Only the feedback condition would receive Patch B’s test results.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+
+<pre class="mermaid mermaid-js">flowchart LR
+    C[Latest code] --&gt; P[Plan] --&gt; A[Patch] --&gt; T[Development tests]
+    A --&gt; U[Update current code] --&gt; C
+    T --&gt;|feedback condition only| P
+    T --&gt; B[Keep best by development score]
+    B --&gt; H[Held-out tests after selection]
+</pre>
+</div>
+<p></p></figure><p></p>
 </div>
 </div>
 </div>
-</section>
-<section id="what-youll-build" class="level2">
-<h2 class="anchored" data-anchor-id="what-youll-build">What You’ll Build</h2>
-<section id="core-agentic-components" class="level3">
-<h3 class="anchored" data-anchor-id="core-agentic-components">Core Agentic Components</h3>
-<p>You’ll implement the building blocks of an autonomous agent: - <strong>Code Execution Environment</strong>: A safe sandbox for the agent to run and test code. - <strong>ReAct Loop</strong>: The main control loop that interleaves Reasoning, Acting, and Observing. - <strong>Tool Use</strong>: Mechanisms for the model to invoke external functions.</p>
-</section>
-<section id="evaluation-frameworks" class="level3">
-<h3 class="anchored" data-anchor-id="evaluation-frameworks">Evaluation Frameworks</h3>
-<p>You’ll build rigorous ways to measure performance: - <strong>Pass@k Metrics</strong>: Measuring reliability across multiple attempts. - <strong>Strict Testing</strong>: Creating adversarial test cases to catch subtle bugs. - <strong>Trajectory Analysis</strong>: Evaluating the quality of the agent’s reasoning process.</p>
-</section>
-</section>
-<section id="technical-stack" class="level2">
-<h2 class="anchored" data-anchor-id="technical-stack">Technical Stack</h2>
+<p>Run two tasks, three seeds (11, 22, 33) and two conditions: 12 runs, each with at most two rounds and four calls. The first prompts, seeds and budgets match. In round two, only access to development feedback differs; both conditions use their latest code. Check that the paired first patches match before interpreting a difference.</p>
 <ul>
-<li><strong>Models</strong>: Gemma-2-2b-it (Google) or SmolLM-360M (HuggingFaceTB)</li>
-<li><strong>Frameworks</strong>: PyTorch, Hugging Face Transformers</li>
-<li><strong>Dataset</strong>: QuixBugs (classic algorithmic bugs)</li>
-<li><strong>Compute</strong>: CPU (optimized for Apple Silicon/standard CPU) or GPU</li>
+<li><strong>Binary search:</strong> use STRICT for development. Its specification already states the required behavior; feedback may still fail to produce a useful change.</li>
+<li><strong>Device-status decoding:</strong> use the supplied development cases. The prompt lists device codes and possible labels but omits their correspondence; listing order does not define it. Tests reveal that missing information. Keep the supplied unknown-label starter and development cases unchanged so this task tests learning the mapping rather than repairing unrelated bugs. Codes are case-sensitive and unknown codes map to <code>unknown</code>. Keep the mapping and expected outputs out of both initial prompts. They are visible in the helper for auditing, not secret from students.</li>
 </ul>
-</section>
-<section id="research-context" class="level2">
-<h2 class="anchored" data-anchor-id="research-context">Research Context</h2>
-<p>This project connects to the forefront of AI research:</p>
+<p>After each run, score the selected candidate on 100 disjoint cases per task. Decoder evaluation uses new lists, repetitions and unknown codes under the same mapping; it does not establish transfer to a new device. Keep held-out cases out of prompts and selection, and do not tune after viewing them. This deliberately incomplete API task illustrates the value of external information, not general autonomous self-correction.</p>
+<p>Write 250-400 words, excluding tables and code. Refer to the generated tables; do not copy their numbers into another table.</p>
 <ul>
-<li><strong>ReAct</strong> (<a href="https://react-lm.github.io/">Yao et al., 2022</a>) — Synergizing reasoning and acting in language models.</li>
-<li><strong>Agentic Workflows</strong> — Moving beyond simple QA to autonomous problem solving.</li>
-<li><strong>Small Language Models</strong> — Showing how agentic patterns allow smaller models to outperform larger ones on complex tasks.</li>
+<li>Compare held-out successes out of three, case pass rates and costs. Distinguish a changed patch from an improved or successful repair. Say if the selected code is the starter.</li>
+<li>Trace one two-round run: its failing input, plan, code change (or lack of change), and whether the patch addressed the failure. Use the development trajectory plot to describe progress or regressions. If every run stops in round one, explain why that gives no second-round evidence.</li>
+<li>Check that paired first-round prompts, plans and patches match; investigate mismatches.</li>
+<li>Explain what information the decoder lacks and what feedback supplies. Binary-search feedback illustrates an already stated requirement. Explain the limits of three seeds, two tasks and one device mapping.</li>
 </ul>
-<hr>
-<p><strong>Previous</strong>: <a href="../projects/project2.html">← Project 2: Neural Archaeology</a> | <strong>Next</strong>: <a href="../projects/capstone.html">Capstone Project →</a></p>
+<p>Equal call limits can have different costs. Q1 versus Q6 does not isolate iteration because Q6 also adds a generated plan. The scripted recovery check tests controller behavior, not model accuracy.</p>
+</section>
+<section id="results-and-submission" class="level2">
+<h2 class="anchored" data-anchor-id="results-and-submission">Results and submission</h2>
+<p>Improvements, failures and null results can all earn full credit. Use your saved evidence and do not rerun until a desired result appears. Staff validation records are included with the instructor package; their scores are not grading targets.</p>
+<p>Submit one PDF of your completed notebook, including the six implementations, required analysis for Q2, Q3 and Q6, tables, plots and code comparisons. Use the notebook’s final print-export cell: save/download the completed <code>.ipynb</code>, export it to HTML, then open the HTML in Chrome and choose <strong>Print &gt; Save as PDF</strong>. Check for clipped code, tables or figures. No separate report is required. Keep the <code>.ipynb</code> and <code>results/student_run.json</code> as backups; they are not additional required submissions.</p>
+<p>An optional extension is ungraded: choose one change and a fixed extra call budget before running it, such as revealing the decoder mapping in both prompts or testing a different device mapping. No training, larger-model comparison, agent framework or production sandbox is required. Do not spend money on an extension.</p>
+<p>References: <a href="https://react-lm.github.io/">ReAct</a>, <a href="https://github.com/jkoppel/QuixBugs">QuixBugs</a>, <a href="https://huggingface.co/Qwen/Qwen3-1.7B">Qwen3</a>.</p>
 
 
 </section>
