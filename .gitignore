@@ -208,6 +208,9 @@ Lecture*/**/*.py
 Project*/**/*.py
 AI_Literacy_Interactive_Notebook.py
 
+# Hand-authored source for the printable Lecture 5 AI-fluency quiz.
+!Lecture 5 Probabilistic Classification/ai-fluency-quiz/build_quiz.py
+
 # ===== Local jupytext/jupyter config =====
 .jupytext.toml
 jupytext.toml
@@ -272,9 +275,21 @@ Lecture 16 RNN and Recurrent Language Models/data/
 # Private review artifacts and classroom working copies are not release files.
 /tmp/
 /output/
+/archive/
+*_submission.html
 **/*-original-backup.ipynb
 **/*-Copy[0-9]*.ipynb
 /Lecture 2 KNN/project-matchmaker/student_data.json
 /Lecture 2 KNN/project-matchmaker/student_data_*.json
 !/Lecture 2 KNN/project-matchmaker/student_data_sample.json
 /Lecture 2 KNN/project-matchmaker/response.csv
+
+# Public Project 3 student-release allowlist: publish only the student notebook,
+# its PDF, the 2-page student field guide PDF, README, and requirements; keep
+# local authoring helpers/fixtures and archived drafts private.
+/Project 3 Thought Cascade/*
+!/Project 3 Thought Cascade/README.md
+!/Project 3 Thought Cascade/requirements.txt
+!/Project 3 Thought Cascade/p03_Thought_Cascade.ipynb
+!/Project 3 Thought Cascade/p03_Thought_Cascade.pdf
+!/Project 3 Thought Cascade/Project3_Student_Guide.pdf

@@ -1,38 +1,15 @@
 # Project 3: Thought Cascade
-**Building and Evaluating Agentic AI Systems with Small Language Models**
 
-## Overview
-In this assignment, you will explore the transition from traditional "single-shot" prompting to **Agentic AI**. You will build a system that uses the **ReAct (Reasoning + Acting)** pattern to solve complex debugging problems by iterating, testing, and self-correcting.
+Updated 9 November 2026. The student notebook has six function blanks and three written-answer cells. The supplied buggy function and example tests are visible before execution; experiment results are blank. Grading totals 100: Q1 (15), Q2 (10), Q3 (10), Q4 (10), Q5 (10), Q6 (45).
 
-## Prerequisites
-- Python 3.10+
-- Basic familiarity with PyTorch and Hugging Face Transformers
-- (Optional) A GPU is recommended for faster inference, but the code is optimized to run on CPU (Apple Silicon MPS or standard CPU).
+The notebook contains all instructions, six function exercises and three written answers. Students work in [`p03_Thought_Cascade.ipynb`](p03_Thought_Cascade.ipynb) and submit **one PDF**. A read-only [`p03_Thought_Cascade.pdf`](p03_Thought_Cascade.pdf) preview and a 2-page companion [`Project3_Student_Guide.pdf`](Project3_Student_Guide.pdf) field guide (covering workflow, mental models, and common contract pitfalls without spoilers) are included alongside the notebook. Keep the completed `.ipynb` and JSON log as backups; no separate report is required.
 
-## Setup
+Open https://colab.research.google.com/, choose **File > Upload notebook**, select `p03_Thought_Cascade.ipynb`, and choose **Runtime > Change runtime type > T4 GPU**. Run setup, then work through Q1-Q6 in order. Helpers, fixtures and three illustrations are embedded; no separate upload, token or paid API is needed. Free GPU availability varies. If no GPU is available, run the deterministic checks and ask staff for recorded results; label them as recorded.
 
-1.  **Install Dependencies**
-    ```bash
-    pip install -r requirements.txt
-    ```
+The supplied model is Qwen3-1.7B with 4-bit NF4, double quantization and FP16 compute. Thinking stays off. Keep the pinned revision, seeds 11/22/33 and supplied sampling settings. The required experiment uses at most 57 model calls. Allow about 10-15 minutes for setup and execution; this does not include implementation or analysis time. Python functions, loops, lists, dictionaries and reading exceptions are prerequisites. Lecture 17 introduces prompts, tools and observations; the notebook includes a worked controller trace.
 
-2.  **Model Setup**
-    The notebook is configured to use **Gemma-2-2b-it** (Google) or **SmolLM-360M** (HuggingFaceTB).
-    - If you have models from Project 2, you can point the notebook to their local paths.
-    - Otherwise, the notebook will automatically download the necessary weights from Hugging Face (approx. 2-4GB) on the first run.
+Complete the functions in notebook cells. Setup replaces extracted helpers each time it runs. Locally, these files are in `.thought_cascade/`; in Colab, `/content/thought-cascade/`. To run locally, install PyTorch, Jupyter and `requirements.txt` in the kernel environment. Generation supports CUDA or Apple Silicon MPS. The local validation used PyTorch 2.11.0, Transformers 4.57.3 and bitsandbytes 0.50.2; Colab uses bitsandbytes 0.48.2. The code runner is not a security sandbox; use a disposable runtime without secrets or a Drive mount.
 
-## Running the Assignment
+To submit, save/download the completed notebook, run the final print-export cell, then open the HTML in Chrome and choose **Print > Save as PDF**. In Colab, select the saved notebook when prompted. The export retains instructions, graded code, answers, tables, figures and code comparisons, while omitting supplied setup and execution code. Inspect the PDF and name it `LastName_FirstName_Project3.pdf`.
 
-1.  Start Jupyter:
-    ```bash
-    jupyter notebook
-    ```
-2.  Open `p03_Thought_Cascade.ipynb` and follow the instructions.
-
-## Directory Structure
-- `p03_Thought_Cascade.ipynb`: The main assignment file.
-- `data/QuixBugs/`: Dataset of algorithmic bugs used for evaluation.
-- `images/`: Helper diagrams for the notebook.
-
-## Submission
-Complete the questions marked with `TODO` in the notebook and submit your final `.ipynb` or exported PDF as per the course guidelines.
+An unchanged or unsuccessful patch can still support a strong analysis. Full credit does not require a positive feedback effect. Do not rerun until a preferred result appears.

@@ -66,7 +66,7 @@ Three projects, three ways to make a model reveal what it is doing.
       <a href="Project%203%20Thought%20Cascade/p03_Thought_Cascade.ipynb"><img src="readme-assets/projects/thought-cascade.svg" alt="A real QuixBugs error moving through observe, reason, patch, and verify steps"></a>
       <h3>03 · Thought Cascade</h3>
       <p>Give a small language model tools and feedback, then measure when a reasoning-and-action loop actually repairs broken code.</p>
-      <p><a href="Project%203%20Thought%20Cascade/README.md">Brief</a> · <a href="Project%203%20Thought%20Cascade/p03_Thought_Cascade.ipynb">Notebook</a></p>
+      <p><a href="Project%203%20Thought%20Cascade/README.md">Brief</a> · <a href="Project%203%20Thought%20Cascade/p03_Thought_Cascade.ipynb">Notebook</a> · <a href="Project%203%20Thought%20Cascade/p03_Thought_Cascade.pdf">PDF</a> · <a href="Project%203%20Thought%20Cascade/Project3_Student_Guide.pdf">Field Guide</a></p>
     </td>
   </tr>
 </table>

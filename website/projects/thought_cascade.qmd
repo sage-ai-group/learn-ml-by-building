@@ -1,73 +1,131 @@
 ---
 title: "Project 3: Thought Cascade"
-subtitle: "Building and Evaluating Agentic AI Systems with Small Language Models"
+format:
+  html:
+    mermaid:
+      theme: neutral
 ---
 
-## Overview
+Build a small code-repair loop and measure when feedback helps. You will write tests, compare prompts, and inspect how test results change a repair.
 
-:::{.callout-note}
-## Fall 2026
-This is an individual assignment worth 10% of the course grade. It is due Monday, November 2, at 11:59 p.m. ET. See the [live schedule](../schedule.qmd) for updates.
-:::
+Complete the code and required analysis directly in the notebook and submit a printed PDF of it. The notebook contains the full instructions; no separate report is needed.
 
-In this assignment, you will explore the transition from traditional "single-shot" prompting to **Agentic AI**. You will build a system that uses the **ReAct (Reasoning + Acting)** pattern to solve complex debugging problems by iterating, testing, and self-correcting.
+This is an individual assignment worth 10% of the course grade, marked out of 100 points: Q1 (15), Q2 (10), Q3 (10), Q4 (10), Q5 (10) and Q6 (45). See the [course schedule](../schedule.qmd) for the deadline.
 
-## Learning Objectives
+```{mermaid}
+flowchart LR
+    C[Code + permitted feedback] --> P[Plan]
+    P --> A[Patch]
+    A --> T[Tests]
+    T -->|next round| C
+```
 
-By completing this project, you will:
-
-- **Understand** the theoretical foundations of agentic AI and why iteration beats size
-- **Build** complete agentic systems using the ReAct pattern
-- **Measure** system performance at the component level, not just end-to-end
-- **Design** tools that enable effective agent-environment interaction
-- **Diagnose** failure modes and implement recovery strategies
-- **Apply** agentic patterns to diverse problem domains
-
-## Materials
+## Getting started
 
 :::{.callout-tip}
 ## Quick Access
-**[Project Notebook (GitHub)](https://github.com/sage-ai-group/learn-ml-by-building/blob/main/Project%203%20Thought%20Cascade/p03_Thought_Cascade.ipynb)** — Complete implementation guide and assignment  
-**[Setup Guide](https://github.com/sage-ai-group/learn-ml-by-building/blob/main/Project%203%20Thought%20Cascade/README.md)** — Local setup instructions
+- **[Project Notebook (`.ipynb`)](https://github.com/sage-ai-group/learn-ml-by-building/blob/main/Project%203%20Thought%20Cascade/p03_Thought_Cascade.ipynb)** — Self-contained assignment notebook (upload directly to Google Colab)
+- **[Notebook Preview (`.pdf`)](https://github.com/sage-ai-group/learn-ml-by-building/blob/main/Project%203%20Thought%20Cascade/p03_Thought_Cascade.pdf)** — Read-only PDF copy of the student notebook
+- **[Student Field Guide (`.pdf`)](https://github.com/sage-ai-group/learn-ml-by-building/blob/main/Project%203%20Thought%20Cascade/Project3_Student_Guide.pdf)** — 2-page companion sheet (3-stage workflow, mini knowledge points, and contract checklist)
+- **[Setup Guide (`README.md`)](https://github.com/sage-ai-group/learn-ml-by-building/blob/main/Project%203%20Thought%20Cascade/README.md)** — Local environment notes and troubleshooting
 :::
 
-:::{.callout-important collapse=false}
-## Submission Requirements
-1. **Complete all coding implementations** marked with `TODO` in the notebook.
-2. **Complete all analysis sections** explicitly labeled "Required Analysis".
-3. **Run all cells** so that key tables and plots are visible in your saved notebook.
-4. **Follow course submission instructions** for exporting your answers.
-:::
+Download the course notebook, open [Google Colab](https://colab.research.google.com/), and choose **File > Upload notebook**. Select **Runtime > Change runtime type > T4 GPU** and run setup first. Helpers, fixtures and illustrations are embedded; no separate files are needed. Use Qwen3-1.7B in 4-bit NF4 with the supplied model revision and settings. No Hugging Face token or paid API is needed. The [setup guide](https://github.com/sage-ai-group/learn-ml-by-building/blob/main/Project%203%20Thought%20Cascade/README.md) covers local use and troubleshooting.
 
-## What You'll Build
+Work through Q1–Q6 in order. Complete six functions marked `TODO`: three in Q1 and one each in Q4–Q6. The notebook provides their full contracts and checks. You should be comfortable with Python functions, loops, lists, dictionaries and reading exceptions. Lecture 17 introduces prompts, tools and observations; the notebook includes a worked controller example. Loading, quantization, execution and logging are supplied, not assessed. Complete exercises in notebook cells: rerunning setup replaces the extracted support files.
 
-### Core Agentic Components
-You'll implement the building blocks of an autonomous agent:
-- **Code Execution Environment**: A safe sandbox for the agent to run and test code.
-- **ReAct Loop**: The main control loop that interleaves Reasoning, Acting, and Observing.
-- **Tool Use**: Mechanisms for the model to invoke external functions.
+The experiments use seeds 11, 22 and 33 and at most 57 model calls: six in Q1, three in Q3 and up to 48 in Q6. Plans get 128 output tokens, patches get 512, and inputs plus outputs are capped at 4096. Allow about 10–15 minutes including setup and model download; runtime varies. This is computer runtime, not total assignment time. Plan separate work sessions for implementation, experiments and analysis.
 
-### Evaluation Frameworks
-You'll build rigorous ways to measure performance:
-- **Pass@k Metrics**: Measuring reliability across multiple attempts.
-- **Strict Testing**: Creating adversarial test cases to catch subtle bugs.
-- **Trajectory Analysis**: Evaluating the quality of the agent's reasoning process.
+If no GPU is available, complete Q1's deterministic checks and Q4–Q6's scripted checks, then ask staff for recorded results. Label recorded results as such. Do not purchase compute. The code runner has a timeout but is not a security sandbox: use a disposable runtime without Drive mounts or secrets.
 
-## Technical Stack
+## Q1. Tests and metrics (15 points)
 
-- **Models**: Gemma-2-2b-it (Google) or SmolLM-360M (HuggingFaceTB)
-- **Frameworks**: PyTorch, Hugging Face Transformers
-- **Dataset**: QuixBugs (classic algorithmic bugs)
-- **Compute**: CPU (optimized for Apple Silicon/standard CPU) or GPU
+The supplied binary search should return the leftmost matching index in a sorted integer list, or -1 when absent. Binary search halves the candidate interval. In a half-open interval `[left, right)`, the right bound is excluded; updates must preserve that convention. A matching value may have an earlier duplicate. Trace the two illustrated failures in the notebook, then implement:
 
-## Research Context
+- `leftmost_index_or_minus_one` (3 points): an independent linear-scan oracle.
+- `build_strict_tests` (7): at least 10 distinct explicit cases covering empty and singleton lists, first/last index, absent below/between/above, negative values and duplicates. Put these cases first, then add exactly `n_random` cases using a local `random.Random(seed)`: sorted arrays of length 0–20, values −10…10 and targets −12…12. Label cases with your oracle. Use seed 123 and 100 random cases for the experiment.
+- `measure_single_shot_success` (5): aggregate saved attempts into attempt count, all-tests-pass success rate, mean test pass fraction and compilation rate. Preserve the records, keep failures in the denominator, and raise `ValueError` for empty input.
 
-This project connects to the forefront of AI research:
+Run the checks and coverage plot. Inspect whether generated code differs from the starter; a changed patch need not be better. A patch passing 91 of 100 cases has a 91% case pass rate but is not a successful repair. Those cases evaluate one patch, not 100 independent model attempts. The original code should pass MINIMAL's four cases and fail a valid STRICT suite; exact STRICT counts depend on your cases. Generate three prompt-A attempts and rescore the same outputs on STRICT. Also run one attempt each on `gcd`, `flatten` and `lcs_length` with seed 11. Here `lcs_length` means longest common substring, not subsequence.
 
-- **ReAct** ([Yao et al., 2022](https://react-lm.github.io/)) — Synergizing reasoning and acting in language models.
-- **Agentic Workflows** — Moving beyond simple QA to autonomous problem solving.
-- **Small Language Models** — Showing how agentic patterns allow smaller models to outperform larger ones on complex tasks.
+## Q2. Analyze the results (10 points)
 
----
+Write 200–350 words covering:
 
-**Previous**: [← Project 2: Neural Archaeology](project2.qmd) | **Next**: [Capstone Project →](capstone.qmd)
+1. The original code's MINIMAL and STRICT counts, with one failing input and an explanation of the bug (3 points).
+2. The same three generated outputs under both suites. Distinguish changed measurement from changed model behavior (3).
+3. Syntax, execution and logical failures in your saved records (2). Inspect exception counts and failures; `tested` only means the suite ran, and compilation only checks syntax. If a category did not occur, say so; label any synthetic examples.
+4. Why one attempt on each of three QuixBugs tasks cannot establish consistent performance, and why public tests do not establish generalization (2).
+
+## Q3. Compare two prompts (10 points)
+
+Reuse prompt A's saved outputs. Prompt B adds the supplied instruction to check loop bounds, duplicates and empty input. Use the same seeds, settings, patch budget and STRICT evaluator. Keep STRICT out of the prompts and do not regenerate A selectively.
+
+Report the table and one paired code comparison, including whether either patch changed the starter (5 points). Explain the result and the uncertainty from three seeds (5), including a ceiling effect if both prompts pass every test. Aim for 100-200 words, excluding the table and code.
+
+## Q4. Generate a plan (10 points)
+
+Implement `generate_thought(client, context, seed)`. Include the supplied context unchanged: specification, examples, current code, and development feedback when present. Ask for a diagnosis and one proposed change in at most three sentences, without code. Make one call with the given seed and `max_new_tokens=128`; return the full generation record.
+
+Points: complete context (4), focused instruction (3), correct seed, token limit and return value (3). Keep the function task-independent: do not append known solutions, a decoder mapping or test answers. Staff inspect prompts as well as scripted checks.
+
+## Q5. Generate an action (10 points)
+
+Implement `generate_action(client, context, thought, seed)`, where `thought` is the plan text. Include the complete context and plan. Request the complete corrected Python module in one code block with no prose. Make one call with the given seed and `max_new_tokens=512`, then use `extract_code`.
+
+Return `(action, generation_record)`, where `action = {'tool': 'fix_code', 'params': {'code': extracted_code}}`. Construct the dictionary in Python. Run the component checks.
+
+Points: context and plan (4), code extraction and action structure (4), reproducible record (2).
+
+## Q6. Implement the loop (45 points)
+
+Implement `react_loop` using the notebook's contract. Start by evaluating the original code on development tests. Both conditions revise their latest code. Neither sees test results in round one; only `feedback=True` receives the latest observation in subsequent rounds. Without feedback, keep results, scores and failure descriptions out of model prompts. Both controllers still use development scores for stopping and selection.
+
+In zero-based round `i`, use seeds `seed + 2*i` for the plan and `seed + 2*i + 1` for the patch. Validate each action and record its result. Invalid actions become feedback while retaining the preceding code. Keep the best development score; ties keep the earlier candidate. Stop on development success or at the round limit. An initially correct candidate needs no model calls. Never use held-out cases for selection.
+
+The controller earns 20 points: initialization and context (6), validation and step records (5), selection and stopping (6), and seeds and call limits (3). Scripted checks earn 5 points. The experiment earns 10: complete paired runs (4), tables and costs (3), and the trajectory plot and code comparison (3). Analysis earns 10: interpreting outcomes (3), tracing a change or failure (3), checking paired first rounds (2), and explaining information and generalization limits (2).
+
+The next prompt uses the current candidate; final evaluation uses the best candidate. For example:
+
+| After testing | Current candidate | Development score | Best candidate |
+|---|---|---|---|
+| Start | Original | 2/4 | Original |
+| Round 1 | Patch A | 3/4 | Patch A |
+| Round 2 | Patch B | 1/4 | Patch A |
+
+These are invented scores. Another round would revise Patch B, while final selection keeps Patch A. Only the feedback condition would receive Patch B's test results.
+
+```{mermaid}
+flowchart LR
+    C[Latest code] --> P[Plan] --> A[Patch] --> T[Development tests]
+    A --> U[Update current code] --> C
+    T -->|feedback condition only| P
+    T --> B[Keep best by development score]
+    B --> H[Held-out tests after selection]
+```
+
+Run two tasks, three seeds (11, 22, 33) and two conditions: 12 runs, each with at most two rounds and four calls. The first prompts, seeds and budgets match. In round two, only access to development feedback differs; both conditions use their latest code. Check that the paired first patches match before interpreting a difference.
+
+- **Binary search:** use STRICT for development. Its specification already states the required behavior; feedback may still fail to produce a useful change.
+- **Device-status decoding:** use the supplied development cases. The prompt lists device codes and possible labels but omits their correspondence; listing order does not define it. Tests reveal that missing information. Keep the supplied unknown-label starter and development cases unchanged so this task tests learning the mapping rather than repairing unrelated bugs. Codes are case-sensitive and unknown codes map to `unknown`. Keep the mapping and expected outputs out of both initial prompts. They are visible in the helper for auditing, not secret from students.
+
+After each run, score the selected candidate on 100 disjoint cases per task. Decoder evaluation uses new lists, repetitions and unknown codes under the same mapping; it does not establish transfer to a new device. Keep held-out cases out of prompts and selection, and do not tune after viewing them. This deliberately incomplete API task illustrates the value of external information, not general autonomous self-correction.
+
+Write 250-400 words, excluding tables and code. Refer to the generated tables; do not copy their numbers into another table.
+
+- Compare held-out successes out of three, case pass rates and costs. Distinguish a changed patch from an improved or successful repair. Say if the selected code is the starter.
+- Trace one two-round run: its failing input, plan, code change (or lack of change), and whether the patch addressed the failure. Use the development trajectory plot to describe progress or regressions. If every run stops in round one, explain why that gives no second-round evidence.
+- Check that paired first-round prompts, plans and patches match; investigate mismatches.
+- Explain what information the decoder lacks and what feedback supplies. Binary-search feedback illustrates an already stated requirement. Explain the limits of three seeds, two tasks and one device mapping.
+
+Equal call limits can have different costs. Q1 versus Q6 does not isolate iteration because Q6 also adds a generated plan. The scripted recovery check tests controller behavior, not model accuracy.
+
+## Results and submission
+
+Improvements, failures and null results can all earn full credit. Use your saved evidence and do not rerun until a desired result appears. Staff validation records are included with the instructor package; their scores are not grading targets.
+
+Submit one PDF of your completed notebook, including the six implementations, required analysis for Q2, Q3 and Q6, tables, plots and code comparisons. Use the notebook's final print-export cell: save/download the completed `.ipynb`, export it to HTML, then open the HTML in Chrome and choose **Print > Save as PDF**. Check for clipped code, tables or figures. No separate report is required. Keep the `.ipynb` and `results/student_run.json` as backups; they are not additional required submissions.
+
+An optional extension is ungraded: choose one change and a fixed extra call budget before running it, such as revealing the decoder mapping in both prompts or testing a different device mapping. No training, larger-model comparison, agent framework or production sandbox is required. Do not spend money on an extension.
+
+References: [ReAct](https://react-lm.github.io/), [QuixBugs](https://github.com/jkoppel/QuixBugs), [Qwen3](https://huggingface.co/Qwen/Qwen3-1.7B).
